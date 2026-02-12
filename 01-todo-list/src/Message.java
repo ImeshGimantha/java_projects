@@ -29,7 +29,7 @@ public class Message {
         System.out.print("\nPlease enter your choice [1-2]: ");
     }
 
-    public void editTaskMenu(){
+    public static void editTaskMenu(){
         System.out.println("Edit Task Options");
         System.out.println("=================");
         System.out.println("\nPick an option:");
