@@ -1,18 +1,22 @@
+import java.io.Serializable;
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-public class Task {
+public class Task implements Serializable {
     private String title;
     private String project;
     private String dueDate;
+    public LocalDate date;
     private boolean isCompleted;
+    private static final long serialVersionUID = 1L;
 
     Task(String title, String project, LocalDate dueDate){
         this.setTitle(title);
         this.setProject(project);
         this.setDueDate(dueDate);
         this.isCompleted = false;
+        this.date = dueDate;
     }
 
     public void setTitle(String title) throws NullPointerException {
@@ -48,5 +52,9 @@ public class Task {
 
     public boolean status() {
         return this.isCompleted;
+    }
+
+    public void setStatus(boolean status) {
+        this.isCompleted = status;
     }
 }

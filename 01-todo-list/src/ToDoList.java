@@ -1,7 +1,6 @@
+import java.io.*;
 import java.time.LocalDate;
-import java.util.Comparator;
-import java.util.Scanner;
-import java.util.ArrayList;
+import java.util.*;
 
 public class ToDoList {
     private ArrayList<Task> taskList;
@@ -67,6 +66,98 @@ public class ToDoList {
             System.out.println(Message.GREEN_TEXT + "New task added successfully\n" + Message.RESET_TEXT);
         } catch (Exception e) {
             System.out.println(Message.RED_TEXT + "Can't create new Task\n" + Message.RESET_TEXT);
+        }
+    }
+
+    public void listAllTaskWithIndex() {
+        String displayFormat = "%-5s %-35s %-20s %-12s %-10s";
+        System.out.printf((displayFormat) + "%n", "Num", "Title", "Project", "Due Date", "Completed");
+        System.out.printf((displayFormat) + "%n", "===", "=====", "=======", "========", "=========");
+        taskList.forEach(task -> System.out.printf((displayFormat) + "%n",
+                (taskList.indexOf(task) + 1),
+                task.getTitle(),
+                task.getProject(),
+                task.getDueDate(),
+                (task.status() ? "Yes" : "No")
+        ));
+
+        System.out.print("\n>>> Type a task number: ");
+    }
+
+    public void showSelectedTask(int taskNumber) {
+            System.out.println("\n>>> Task num " + taskNumber + " is selected:");
+            System.out.printf("""
+                    Title    : %s
+                    Project  : %s
+                    Status   : %s
+                    Due Date : %s
+                    """,
+                    taskList.get(taskNumber - 1).getTitle(),
+                    taskList.get(taskNumber - 1).getProject(),
+                    (taskList.get(taskNumber - 1).status() ? "Yes" : "No"),
+                    taskList.get(taskNumber - 1).getDueDate()
+            );
+    }
+
+    public void editTask(int editTaskChoice, int taskNumber) {
+        try {
+            switch (editTaskChoice) {
+                case 1 -> {
+                    System.out.println("ReEnter task details you want to change [default press Enter]: ");
+                    System.out.print("Task Title: ");
+                    String title = scanner.nextLine();
+                    System.out.print("Task Project: ");
+                    String project = scanner.nextLine();
+                    System.out.print("Due Date: ");
+                    String date = this.scanner.nextLine();
+
+                    title = title.isEmpty() ? taskList.get(taskNumber - 1).getTitle() : title;
+                    project = project.isEmpty() ? taskList.get(taskNumber - 1).getProject() : project;
+                    LocalDate dueDate = date.isEmpty() ? taskList.get(taskNumber - 1).date : LocalDate.parse(date);
+
+                    taskList.set((taskNumber - 1), new Task(title, project, dueDate));
+
+                    System.out.println(Message.GREEN_TEXT + "\nTask " + taskNumber + " is successfully updated!\n" + Message.RESET_TEXT);
+                }
+                case 2 -> {
+                    taskList.get(taskNumber - 1).setStatus(true);
+                    System.out.println(Message.GREEN_TEXT + "\nTask " + taskNumber + " is marked as completed!\n" + Message.RESET_TEXT);
+                }
+                case 3 -> {
+                    taskList.remove(taskNumber - 1);
+                    System.out.println(Message.GREEN_TEXT + "\nTask " + taskNumber + " is successfully removed!\n" + Message.RESET_TEXT);
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Can't edit task");
+        }
+    }
+
+    public void saveTasksToFile(String filePath) {
+        try (
+            FileOutputStream fileOutputStream = new FileOutputStream(filePath);
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream)
+        ) {
+            objectOutputStream.writeObject(taskList);
+        } catch (FileNotFoundException e) {
+            System.out.println("Can't locate file");
+        } catch (IOException e) {
+            System.out.println("Can't write file: " + e.getMessage());
+        }
+    }
+
+    public void readTasksFromFile(String filePath) {
+        try (
+            FileInputStream fileInputStream = new FileInputStream(filePath);
+            ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream)
+        ) {
+            taskList = (ArrayList<Task>) objectInputStream.readObject();
+        } catch (FileNotFoundException e) {
+            System.out.println("Can't locate file");
+        } catch (ClassNotFoundException e) {
+            System.out.println("Class not Found!");
+        } catch (IOException e) {
+            System.out.println("Can't read file");
         }
     }
 

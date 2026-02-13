@@ -30,13 +30,14 @@ public class Message {
     }
 
     public static void editTaskMenu(){
-        System.out.println("Edit Task Options");
+        System.out.println("\nEdit Task Options");
         System.out.println("=================");
         System.out.println("\nPick an option:");
         System.out.println("(1) Modify selected task");
         System.out.println("(2) Mark selected task as COMPLETED");
         System.out.println("(3) Delete selected task");
         System.out.println("(4) Return to main menu [default choice, just press Enter]");
+
         System.out.print("\nPlease enter your choice [1-4]: ");
     }
 
